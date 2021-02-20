@@ -17,11 +17,6 @@ public class GrabKey : MonoBehaviour
     public int level;
 
 
-    //public TMP_Text debug;
-    //public TMP_Text debug2;
-
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -31,33 +26,29 @@ public class GrabKey : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        //debug.text = "Hand piching: "+ rightHand.GetFingerIsPinching(OVRHand.HandFinger.Index) + "isColliding: " + isColliding + "Is grabbing: " + isGrabbing;
-        
+    {        
         if(isColliding && rightHand.GetFingerIsPinching(OVRHand.HandFinger.Index)){
+            //Gtabbing the key
             isGrabbing = true;
             this.transform.parent = rightHand.transform;
 
         
         }
         if(isGrabbing && !rightHand.GetFingerIsPinching(OVRHand.HandFinger.Index)){
+            //Releasing the key
             isGrabbing = false;
             this.transform.parent = null;
         }
-        // if(isGrabbing){
-        //     this.transform.position = rightHand.transform.position+offset;
-        //     this.transform.localRotation = rightHand.transform.localRotation * rotationOffset;
-        // }
         
     }
 
     void OnTriggerEnter(Collider other){
-        //debug2.text = "Is Entering"+ other.gameObject.name;
         if(other.gameObject.name=="Hand_Start_CapsuleCollider"){
             isColliding = true;
 
         }
         else if (other.gameObject.name == "Key"){
+            //Changing scene
             if (level == 1)
             {
                 SceneManager.LoadScene("CopyHands");

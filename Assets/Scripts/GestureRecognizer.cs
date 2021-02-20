@@ -29,9 +29,6 @@ public class GestureRecognizer : MonoBehaviour
     public float threshold;
     private bool isExtended;
 
-    public TMP_Text debug;
-    public TMP_Text debug2;
-
     private float speed = 0.01f;
 
     
@@ -47,10 +44,11 @@ public class GestureRecognizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Get hand gestures
         Gesture currentGestureR = isRecognized(skeletonR,fingerBonesR);
         Gesture currentGestureL = isRecognized(skeletonL,fingerBonesL);
 
+        //Initialize hands (if not done in start)
         if (fingerBonesR.Count ==0 || fingerBonesL.Count == 0)
         {
             fingerBonesR = new List<OVRBone>(skeletonR.Bones);
@@ -61,7 +59,6 @@ public class GestureRecognizer : MonoBehaviour
         }
 
         Plane handPlane = new Plane();
-        //Debug.Log(fingerBonesR.Count);
         handPlane.Set3Points(fingerBonesR[6].Transform.position, fingerBonesR[0].Transform.position, fingerBonesR[10].Transform.position);
 
         rightHand.transform.rotation = handAnchorR.rotation;
@@ -73,13 +70,11 @@ public class GestureRecognizer : MonoBehaviour
         rightHand.transform.position -= handTranslation + handTranslation*distance*amp;
         handPosition = handAnchorR.position;
 
-
-
         if (currentGestureR.name == "HandOpen")
         {
+            //Hand is going forward
             isExtended = true;
             rightHand.transform.parent = null;
-            //skeletonR.transform.position = skeletonR.transform.position + handPlane.normal*speed;
             positionDifference = positionDifference + handPlane.normal * speed;
             rightHand.transform.position += handPlane.normal * speed;
 
@@ -90,36 +85,21 @@ public class GestureRecognizer : MonoBehaviour
             Vector3 end;
             if (Physics.Raycast(start, handPlane.normal, out hit, Mathf.Infinity)) end = hit.point;
             else end = start + handPlane.normal*10.0f;
-            
             DrawLine(start, end);
-
-        
         }
         else if(currentGestureR.name == "Palm" && isExtended)
         {
+            //Hand is going backwards
             Vector3 direction = Vector3.Normalize(handAnchorR.position - skeletonR.transform.position);
-            //skeletonR.transform.position = skeletonR.transform.position + direction*speed;
             positionDifference = positionDifference + direction * speed;
             rightHand.transform.position += direction * speed;
         }
         if(currentGestureL.name == "CloseFist")
         {
-            //skeletonR.transform.position = handAnchorR.position;
+            //Reset the hand position
             positionDifference = new Vector3( 0, 0, 0 );
             rightHand.transform.position = handAnchorR.position;
         }
-        
-
-
-
-        //Text to get a new gesture
-        // string test = "";
-        // foreach(var bone in fingerBonesR)
-        // {
-        //     Vector3 currentData = skeletonR.transform.InverseTransformPoint(bone.Transform.position);
-        //     test += " " + currentData.ToString("F4") + " - ";
-        // }
-        // debug2.text = fingerBonesR.Count.ToString() + " start:" + test;
     }
 
     Gesture isRecognized(OVRSkeleton skeleton,List<OVRBone> fingerBones)
