@@ -34,6 +34,7 @@ public class ButtonGame : MonoBehaviour
 
     void Start()
     {
+        // Turn of all light signals
         for(int i=0; i<buttonDots.Count; i++)
         {
             buttonDots[i].SetActive(false);
@@ -45,6 +46,7 @@ public class ButtonGame : MonoBehaviour
 
     void Update()
     {
+        // Put the hint labels on the fingers
         if (index == null || middle == null || ring == null )
         {
             index = GameObject.Find("OVRHandPrefab_L/Bones/Hand_Start/Hand_Index1/Hand_Index2/Hand_Index3/Hand_IndexTip");
@@ -65,6 +67,7 @@ public class ButtonGame : MonoBehaviour
             removeText.transform.parent = ring.transform;
         }
 
+        // When all the buttons are pressed and the yellow signal active, update score
         if (buttonDots[0].active && buttonDots[1].active && buttonDots[2].active && buttonDots[3].active && signalActive)
         {
             if (!wereActive)
@@ -85,7 +88,7 @@ public class ButtonGame : MonoBehaviour
             pointText.SetActive(false);
             tooSoonText.SetActive(false);
         }
-
+        // Win when max score reached
         if (score >= maxScore)
         {
             winText.SetActive(true);
@@ -93,7 +96,7 @@ public class ButtonGame : MonoBehaviour
             key.SetActive(true);
         }
 
-        // Update timer
+        // Update timer and yellow signal state
         timer += Time.deltaTime;
         if (signalActive && timer > signalLenght)
         {
@@ -111,6 +114,7 @@ public class ButtonGame : MonoBehaviour
 
     }
 
+    // Turn light on when button pressed
     public void buttonPressed(int button)
     {
         if (button < buttonDots.Count)
@@ -119,6 +123,8 @@ public class ButtonGame : MonoBehaviour
         }
     }
 
+
+    // Turn light off when button released
     public void buttonReleased(int button)
     {
         if (button < buttonDots.Count)

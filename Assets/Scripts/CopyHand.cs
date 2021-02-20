@@ -7,24 +7,20 @@ public class CopyHand : MonoBehaviour
     public GameObject handToCopy;
     public OVRHand rightHand;
     public OVRHand leftHand;
-    //public GameObject toCopy;
-
+   
     public List<GameObject> copiedHands;
     public Material currentHandMaterial;
     public Material handMaterial;
-    public int c = 0;
-    public int currentHand = 0;
+    private int currentHand = 0;
     public int level;
-    public GestureRecognizer gestureRecognizer;
 
     public float selectionDistance;
 
-    public bool ringPinching = false;
+    private bool ringPinching = false;
 
     void Start()
     {
         copiedHands = new List<GameObject>();
-        //copiedHands.Add(handToCopy);
         changeHandColor(0, handMaterial);
     }
 
@@ -48,7 +44,6 @@ public class CopyHand : MonoBehaviour
             for (int i = 0; i < copiedHands.Count; i++)
             {
                 float distance = (copiedHands[i].transform.position - handToCopy.transform.position).magnitude;
-                //Debug.Log(distance);
                 if (distance < distanceMin)
                 {
                     distanceMinIndex = i;
